@@ -6,9 +6,15 @@
 #define SIZE 5
 
 int main() {
-	printf("\n");
-	SetPhysicalMem();
-	printf("\n");
+	//printf("\n");
+	
+	//SetPhysicalMem();
+	/*
+	void *pt;
+	unsigned long t = 200;
+	char *test = Translate(&t, &pt);
+	*/
+	//printf("\n");
 
     printf("Allocating three arrays of 400 bytes\n");
     void *a = m_alloc(100*4);
@@ -29,8 +35,8 @@ int main() {
             address_a = (unsigned int)a + ((i * SIZE * sizeof(int))) + (j * sizeof(int));
             address_b = (unsigned int)b + ((i * SIZE * sizeof(int))) + (j * sizeof(int));
 		
-		printf("address_a: %d\n",address_a);
-		printf("address_b: %d\n",address_b);
+		//printf("address_a: %d\n",address_a);
+		//printf("address_b: %d\n",address_b);
 
             PutVal((void *)address_a, &x, sizeof(int));
             PutVal((void *)address_b, &x, sizeof(int));

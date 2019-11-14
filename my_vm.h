@@ -30,8 +30,8 @@
 */
 
 //#define TOTAL_PAGES 1048576 //2^20
-#define PG_DIR_SIZE 1024
-#define PG_TABLE_SIZE 1024
+#define PG_DIR_SIZE 1024 //or 2^10
+#define PG_TABLE_SIZE 1024 //or 2^10
 
 // Represents a page table entry
 typedef unsigned long pte_t;
@@ -78,19 +78,19 @@ typedef struct physicalPage {
 	addressSpace *addressSpace;
 } physicalPage;
 
-typedef struct pageDirectory{
-	pde_t numberConvertedFromBits;
-	struct pageTable *next;
-} pageDirectory;
+typedef struct directoryBitMap{
+	pte_t *pageTable;
+} directoryBitMap;
 
-typedef struct bitmap{
-	bool available;
-} bitmap;
+typedef struct pageDirectoryEntry {
+	//pde_t numberConvertedFromBits;
+	struct pageTableEntry *pgTable;
+} pageDirectoryEntry;
 
-typedef struct pageTable {
-	pte_t numberConvertedFromBits;
-	char *addressInPhysicalMemory;
-} pageTable;
+typedef struct pageTableEntry {
+	//pte_t numberConvertedFromBits;
+	int indexInPhysicalMemory;
+} pageTableEntry;
 
 /* 
  ------------------------------------------------------------------------------
@@ -99,10 +99,11 @@ typedef struct pageTable {
 */
 
 void SetPhysicalMem();
-pte_t* Translate(pde_t *pgdir, void *va);
+pte_t * Translate(pde_t *pgdir, void *va);
 int PageMap(pde_t *pgdir, void *va, void* pa);
 bool check_in_tlb(void *va);
 void put_in_tlb(void *va, void *pa);
+void *get_next_avail(int num_pages);
 void *m_alloc(unsigned int num_bytes);
 void a_free(void *va, int size);
 void PutVal(void *va, void *val, int size);
@@ -110,15 +111,15 @@ void GetVal(void *va, void *val, int size);
 void MatMult(void *mat1, void *mat2, int size, void *answer);
 
 /* 
- ------------------------------------------------------------------------------+
+ ------------------------------------------------------------------------------
  ------------------------------ Personal Function Headers ---------------------
  ------------------------------------------------------------------------------
 */
-//int** create2DArray(int row, int col);
-//addressSpace **createMemoryPage(int row, int col);
 char **createMemoryPage(int row, int col);
-addressSpace *createAddressSpace();
 unsigned long convertBitToNum(unsigned long number, unsigned long numBits, unsigned long position);
+int personalTranslate(pageDirectoryEntry *pgdir, void *va);
+void personalPageMap(pageDirectoryEntry *pgdir, void *va);
+int personal_get_next_avail(int num_pages);
 
 
 #endif
